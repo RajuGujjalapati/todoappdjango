@@ -2,14 +2,15 @@ from django.shortcuts import render, HttpResponse, redirect
 from .models import ToDo
 from .forms import ToDoForms, ModelToDOForm
 from django.views.decorators.http import require_POST
-
+import datetime
 
 # Create your views here.
 
 def index(request):
     todo = ToDo.objects.order_by('id')
+    date_now = datetime.datetime.now()
     form = ToDoForms()
-    context = {"todo_list": todo, "form": form}
+    context = {"todo_list": todo, "form": form, "mydate": date_now}
     return render(request, 'mytodo/index.html', context)
     # return render(request, 'mytodo/style.css', context)
 
@@ -52,9 +53,9 @@ def delall(request):
 
 
 # # no use with below method
-# def notcompleted(request, todo_id):
-#     notcom = ToDo.objects.get(pk=todo_id)
-#     notcom.complete = False
-#     notcom.save()
-#     context = {'todo_list': notcom}
-#     return redirect(request, 'index', context)
+def notcompleted(request, todo_id):
+    notcom = ToDo.objects.get(pk=todo_id)
+    notcom.complete = False
+    notcom.save()
+    context = {'todo_list': notcom}
+    return redirect(request, 'index', context)
